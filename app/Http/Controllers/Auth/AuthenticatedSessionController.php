@@ -32,11 +32,12 @@ class AuthenticatedSessionController extends Controller
         $url = match ($request->user()->role) {
             'superadmin' => '/superadmin/dashboard',
             'hrd' => '/hrd/dashboard',
-            'departemen' => '/departemen/dashboard',
+           'departemen' => '/department/dashboard', // Pastikan di sini mengecek 'departemen' dan mengarah ke '/department/dashboard'
             default => '/dashboard',
         };
 
-        return redirect()->intended($url);
+        // return redirect()->intended($url);
+        return redirect($url); // Hapus kata ->intended
     }
 
     /**

@@ -42,6 +42,7 @@
                         <tr>
                             <td class="border border-gray-300 px-4 py-2 font-medium">{{ $dept->nama_departemen }}</td>
                             <td class="border border-gray-300 px-4 py-2 text-center">
+                                <a href="{{ route('hrd.departments.edit', $dept->id) }}" class="text-blue-500 hover:text-blue-700 text-sm font-bold mr-3">Edit</a>  
                                 <form action="{{ route('hrd.departments.destroy', $dept->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus departemen ini?');">
                                     @csrf
                                     @method('DELETE')

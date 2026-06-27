@@ -25,6 +25,23 @@ class DepartmentController extends Controller
         return redirect()->route('hrd.departments.index')->with('success', 'Departemen berhasil ditambahkan!');
     }
 
+    public function edit(Department $department)
+    {
+        return view('hrd.departments.edit', compact('department'));
+    }
+
+    public function update(Request $request, Department $department)
+    {
+        $request->validate([
+            // Validasi ini memastikan nama departemen tidak boleh sama dengan yang lain, KECUALI dengan namanya sendiri
+            'nama_departemen' => 'required|string|max:255|unique:departments,nama_departemen,' . $department->id,
+        ]);
+
+        $department->update($request->all());
+
+        return redirect()->route('hrd.departments.index')->with('success', 'Nama Departemen berhasil diperbarui!');
+    }
+    
     public function destroy(Department $department)
     {
         // Cek dulu apakah ada karyawan di departemen ini, cegah hapus jika ada (opsional tapi disarankan)

@@ -90,8 +90,11 @@ Route::middleware(['auth', 'role:hrd'])->group(function () {
     // Master Data Departemen
     Route::get('/hrd/departments', [App\Http\Controllers\HRD\DepartmentController::class, 'index'])->name('hrd.departments.index');
     Route::post('/hrd/departments', [App\Http\Controllers\HRD\DepartmentController::class, 'store'])->name('hrd.departments.store');
+    // Ini rute Edit dan Update-nya:
+    Route::get('/hrd/departments/{department}/edit', [App\Http\Controllers\HRD\DepartmentController::class, 'edit'])->name('hrd.departments.edit');
+    Route::put('/hrd/departments/{department}', [App\Http\Controllers\HRD\DepartmentController::class, 'update'])->name('hrd.departments.update');
     Route::delete('/hrd/departments/{department}', [App\Http\Controllers\HRD\DepartmentController::class, 'destroy'])->name('hrd.departments.destroy');
-    
+
 });
 
 // 4. Rute Khusus Admin Departemen

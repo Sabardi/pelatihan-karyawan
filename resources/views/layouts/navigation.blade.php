@@ -39,9 +39,40 @@
                         <x-nav-link :href="route('hrd.participants.index')" :active="request()->routeIs('hrd.participants.*')">
                             Manajemen Peserta
                         </x-nav-link>
+
+                        <x-nav-link :href="route('hrd.departments.index')" :active="request()->routeIs('hrd.departments.*')">
+                            Master Departemen
+                        </x-nav-link>
+                    @endif
+                    @if (auth()->user()->role == 'superadmin')
+                        <x-nav-link :href="route('superadmin.departments.index')" :active="request()->routeIs('superadmin.departments.*')">
+                            Master Departemen
+                        </x-nav-link>
+
+                        <x-nav-link href="#" :active="false">
+                            Manajemen Akun
+                        </x-nav-link>
                     @endif
 
-                    @if (auth()->user()->role == 'department')
+                    @if (auth()->user()->role == 'hrd')
+                        <x-nav-link :href="route('hrd.employees.index')" :active="request()->routeIs('hrd.employees.*')">
+                            Master Karyawan
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('hrd.trainings.index')" :active="request()->routeIs('hrd.trainings.*')">
+                            Master Pelatihan
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('hrd.requests.index')" :active="request()->routeIs('hrd.requests.*')">
+                            Persetujuan Pengajuan
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('hrd.participants.index')" :active="request()->routeIs('hrd.participants.*')">
+                            Manajemen Peserta
+                        </x-nav-link>
+                    @endif
+
+                    @if (auth()->user()->role == 'departemen')
                         <x-nav-link :href="route('department.trainings.index')" :active="request()->routeIs('department.trainings.index')">
                             Daftar Pelatihan
                         </x-nav-link>
@@ -53,6 +84,8 @@
 
                 </div>
             </div>
+
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
