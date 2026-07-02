@@ -5,15 +5,44 @@ namespace App\Http\Controllers\HRD;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Training;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
+    // public function index()
+    // {
+    //     // Mengambil semua data karyawan beserta nama departemennya
+    //     $employees = Employee::with('department')->paginate(10); // Menggunakan pagination untuk menampilkan 10 data per halaman
+
+    //     return view('hrd.employees.index', compact('employees'));
+    // }
+
     public function index()
     {
-        // Mengambil semua data karyawan beserta nama departemennya
-        $employees = Employee::with('department')->get();
-        return view('hrd.employees.index', compact('employees'));
+        // 1. Mengambil data karyawan dengan pagination
+        $employees = Employee::with('department')->paginate(10);
+
+        // 2. Menghitung data statistik pelatihan berdasarkan tanggal
+        $today = now()->toDateString();
+
+        $completedTrainings = Training::where('tanggal_selesai', '<', $today)->count();
+
+        $onProgressTrainings = Training::where('tanggal_mulai', '<=', $today)
+                                      ->where('tanggal_selesai', '>=', $today)
+                                      ->count();
+
+        $pendingTrainings = Training::where('tanggal_mulai', '>', $today)
+                                    ->orWhereNull('tanggal_mulai')
+                                    ->count();
+
+        // 3. Mengirimkan semua data ke view
+        return view('hrd.employees.index', compact(
+            'employees',
+            'completedTrainings',
+            'onProgressTrainings',
+            'pendingTrainings'
+        ));
     }
 
     public function create()
@@ -24,6 +53,8 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $request->validate([
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|unique:employees,nik',

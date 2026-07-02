@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Department\TrainingRequestController;
+use App\Http\Controllers\HRD\DashboardController;
 use App\Http\Controllers\HRD\EmployeeController;
 use App\Http\Controllers\HRD\TrainingController;
 use App\Http\Controllers\HRD\TrainingParticipantController;
@@ -29,9 +30,7 @@ Route::middleware(['auth'])->get('/dashboard', function () {
 
 // 2. Rute Khusus Superadmin
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
-    Route::get('/superadmin/dashboard', function () {
-        return view('dashboard'); // Kita arahkan ke file bawaan breeze sementara
-    })->name('superadmin.dashboard');
+       Route::get('/superadmin/dashboard', [DashboardController::class, 'index'])->name('superadmin.dashboard');
 
     // Rute Daftar User (Index)
     Route::get('/superadmin/users', [UserController::class, 'index'])->name('superadmin.users.index');
@@ -59,9 +58,7 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 
 // 3. Rute Khusus HRD
 Route::middleware(['auth', 'role:hrd'])->group(function () {
-    Route::get('/hrd/dashboard', function () {
-        return view('dashboard'); // Kita pakai view dashboard bawaan sementara
-    })->name('hrd.dashboard');
+    Route::get('/hrd/dashboard', [DashboardController::class, 'index'])->name('hrd.dashboard');
 
     // Rute Master Karyawan
     Route::get('/hrd/employees', [EmployeeController::class, 'index'])->name('hrd.employees.index');
@@ -76,6 +73,7 @@ Route::middleware(['auth', 'role:hrd'])->group(function () {
     Route::get('/hrd/trainings/create', [TrainingController::class, 'create'])->name('hrd.trainings.create');
     Route::post('/hrd/trainings', [TrainingController::class, 'store'])->name('hrd.trainings.store');
     Route::get('/hrd/trainings/{training}/edit', [TrainingController::class, 'edit'])->name('hrd.trainings.edit');
+    Route::get('/hrd/trainings/{training}/show', [TrainingController::class, 'show'])->name('hrd.trainings.show'); // Rute untuk menampilkan detail pelatihan
     Route::put('/hrd/trainings/{training}', [TrainingController::class, 'update'])->name('hrd.trainings.update');
     Route::delete('/hrd/trainings/{training}', [TrainingController::class, 'destroy'])->name('hrd.trainings.destroy');
 
@@ -99,9 +97,8 @@ Route::middleware(['auth', 'role:hrd'])->group(function () {
 
 // 4. Rute Khusus Admin Departemen
 Route::middleware(['auth', 'role:departemen'])->group(function () {
-    Route::get('/department/dashboard', function () {
-        return view('dashboard');
-    })->name('department.dashboard');
+    Route::get('departemen/dashboard', [DashboardController::class, 'index'])
+        ->name('department.dashboard');
 
     // Rute untuk melihat pelatihan dan mengajukan pelatihan
     Route::get('/department/trainings', [TrainingRequestController::class, 'index'])->name('department.trainings.index');

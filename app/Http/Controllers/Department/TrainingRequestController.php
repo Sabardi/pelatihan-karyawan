@@ -65,7 +65,7 @@ class TrainingRequestController extends Controller
         $requests = TrainingRequest::with(['training', 'employee'])
             ->where('diajukan_oleh', auth()->id())
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('department.trainings.history', compact('requests'));
     }

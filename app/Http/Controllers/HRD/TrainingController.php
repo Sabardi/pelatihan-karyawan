@@ -10,7 +10,8 @@ class TrainingController extends Controller
 {
     public function index()
     {
-        $trainings = Training::all();
+        $trainings = Training::paginate(10); // Menggunakan pagination untuk menampilkan 10 data per halaman
+
         return view('hrd.trainings.index', compact('trainings'));
     }
 
@@ -19,7 +20,7 @@ class TrainingController extends Controller
         return view('hrd.trainings.create');
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'nama_pelatihan' => 'required|string|max:255',
@@ -39,12 +40,18 @@ class TrainingController extends Controller
         return redirect()->route('hrd.trainings.index')->with('success', 'Data pelatihan berhasil ditambahkan!');
     }
 
-
     public function edit(Training $training)
     {
         return view('hrd.trainings.edit', compact('training'));
     }
 
+    public function show(Training $training)
+    {
+        // Memuat data pelatihan beserta karyawan yang terdaftar
+        $training->load('employees');
+
+        return view('hrd.trainings.show', compact('training'));
+    }
 
     public function update(Request $request, Training $training)
     {
@@ -69,6 +76,7 @@ class TrainingController extends Controller
     public function destroy(Training $training)
     {
         $training->delete();
+
         return redirect()->route('hrd.trainings.index')->with('success', 'Data pelatihan berhasil dihapus!');
     }
 }

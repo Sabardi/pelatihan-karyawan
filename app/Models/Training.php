@@ -20,4 +20,10 @@ class Training extends Model
     {
         return $this->hasMany(TrainingParticipant::class);
     }
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'training_participants', 'training_id', 'employee_id')
+            ->withPivot('status_peserta', 'created_at');
+    }
 }

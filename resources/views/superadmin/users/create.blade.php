@@ -1,59 +1,94 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Tambah User Baru
-        </h2>
-    </x-slot>
+    {{-- <x-slot name="header">Tambah User Baru</x-slot> --}}
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    <style>
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border-radius: 1rem;
+            border: 2px solid #eef2f7;
+            background-color: rgba(241, 245, 249, 0.6);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #334155;
+            outline: none;
+            transition: all .15s ease-in-out;
+        }
+        .form-input:focus {
+            background-color: #ffffff;
+            border-color: #2563eb;
+            box-shadow: 0 8px 28px rgba(37, 99, 235, 0.08);
+        }
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.625rem;
+            margin-left: 0.25rem;
+        }
+    </style>
 
-                <form action="{{ route('superadmin.users.store') }}" method="POST">
-                    @csrf
+    <div class="w-full max-w-2xl mx-auto space-y-6">
+        <!-- Page Title -->
+        <div class="mb-8 text-center">
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Tambah Pengguna</h2>
+            <p class="text-sm text-slate-500 mt-2 font-medium">Buat akun baru untuk memberikan akses ke dalam sistem.</p>
+        </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Nama</label>
-                        <input type="text" name="name" class="w-full border-gray-300 rounded-md shadow-sm"
-                            required>
-                    </div>
+        <!-- Form Card -->
+        <div class="bg-white rounded-[32px] p-8 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-100">
+            <form action="{{ route('superadmin.users.store') }}" method="POST" class="space-y-6">
+                @csrf
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Email</label>
-                        <input type="email" name="email" class="w-full border-gray-300 rounded-md shadow-sm"
-                            required>
-                    </div>
+                <div>
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Masukkan nama..." class="form-input" required />
+                </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Password</label>
-                        <input type="password" name="password" class="w-full border-gray-300 rounded-md shadow-sm"
-                            required>
-                    </div>
+                <div>
+                    <label class="form-label">Alamat Email</label>
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="user@perusahaan.com" class="form-input" required />
+                </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Role</label>
-                        <select name="role" class="w-full border-gray-300 rounded-md shadow-sm" required>
+                <div>
+                    <label class="form-label">Kata Sandi</label>
+                    <input type="password" name="password" placeholder="••••••••" class="form-input" required />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label">Role Akses</label>
+                        <select name="role" class="form-input appearance-none cursor-pointer" required>
                             <option value="departemen">Admin Departemen</option>
                             <option value="hrd">HRD</option>
                             <option value="superadmin">Superadmin</option>
                         </select>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Departemen (Kosongkan jika HRD/Superadmin)</label>
-                        <select name="department_id" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <div>
+                        <label class="form-label">Departemen</label>
+                        <select name="department_id" class="form-input appearance-none cursor-pointer">
                             <option value="">-- Pilih Departemen --</option>
                             @foreach ($departments as $dept)
                                 <option value="{{ $dept->id }}">{{ $dept->nama_departemen }}</option>
                             @endforeach
                         </select>
                     </div>
+                </div>
 
-                    <button type="submit" class="bg-blue-500 text-black px-4 py-2 rounded">Simpan Data</button>
-                    <a href="{{ route('superadmin.users.index') }}" class="ml-2 text-gray-600">Batal</a>
-                </form>
-
-            </div>
+                <!-- Footer Action -->
+                <div class="flex items-center gap-4 pt-4 border-t border-slate-100 mt-8">
+                    <a href="{{ route('superadmin.users.index') }}" class="flex-1 text-center py-3.5 rounded-2xl font-bold text-slate-600 hover:bg-slate-50 transition">
+                        Batal
+                    </a>
+                    <button type="submit" class="flex-[2] py-3.5 rounded-2xl font-bold text-white bg-slate-800 hover:bg-slate-900 transition shadow-lg hover:shadow-xl">
+                        Simpan Data
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </x-app-layout>

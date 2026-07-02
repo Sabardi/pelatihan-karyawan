@@ -1,69 +1,73 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Riwayat Pengajuan Pelatihan
-        </h2>
-    </x-slot>
+    <x-slot name="header">Riwayat Pengajuan Pelatihan</x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+    <div class="w-full space-y-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Riwayat Pengajuan</h2>
+                <p class="text-sm text-slate-500 mt-2 font-medium">Pantau status seluruh pengajuan pelatihan yang telah Anda buat.</p>
+            </div>
+            <a href="{{ route('department.trainings.index') }}" class="flex items-center gap-2 px-6 py-3 bg-slate-800 text-white text-sm font-bold rounded-xl shadow-lg hover:bg-slate-900 transition">
+                <i class="ph-bold ph-plus text-lg"></i>
+                Tambah Pengajuan Baru
+            </a>
+        </div>
 
-                <div class="mb-4 flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-gray-700">Daftar Pengajuan Karyawan</h3>
-                    <a href="{{ route('department.trainings.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600 transition text-sm">
-                        + Tambah Pengajuan Baru
-                    </a>
-                </div>
+        <div class="bg-white rounded-[32px] p-8 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-slate-100">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-slate-400 text-[10px] font-bold uppercase tracking-widest border-b border-slate-100">
+                            <th class="pb-4 px-4">Tanggal Pengajuan</th>
+                            <th class="pb-4 px-4">Karyawan</th>
+                            <th class="pb-4 px-4">Pelatihan</th>
+                            <th class="pb-4 px-4 text-center">Status</th>
+                            <th class="pb-4 px-4">Catatan HRD</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @forelse ($requests as $req)
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="py-5 px-4 text-sm font-medium text-slate-600">
+                                {{ $req->created_at->format('d M Y') }}
+                                <div class="text-[10px] text-slate-400">{{ $req->created_at->format('H:i') }}</div>
+                            </td>
+                            <td class="py-5 px-4">
+                                <div class="font-bold text-slate-800">{{ $req->employee->nama }}</div>
+                                <div class="text-[11px] text-slate-400 uppercase tracking-wide">NIK: {{ $req->employee->nik }}</div>
+                            </td>
+                            <td class="py-5 px-4 font-medium text-slate-700">{{ $req->training->nama_pelatihan }}</td>
+                            <td class="py-5 px-4 text-center">
+                                @php
+                                    $statusClasses = [
+                                        'pending'  => 'bg-amber-50 text-amber-600 border border-amber-200',
+                                        'disetujui' => 'bg-emerald-50 text-emerald-600 border border-emerald-200',
+                                        'approved'  => 'bg-emerald-50 text-emerald-600 border border-emerald-200',
+                                        'ditolak'   => 'bg-rose-50 text-rose-600 border border-rose-200',
+                                        'rejected'  => 'bg-rose-50 text-rose-600 border border-rose-200'
+                                    ];
+                                @endphp
+                                <span class="px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider {{ $statusClasses[$req->status] ?? 'bg-slate-100' }}">
+                                    {{ $req->status }}
+                                </span>
+                            </td>
+                            <td class="py-5 px-4 text-sm text-slate-500 font-medium italic">
+                                {{ $req->catatan_admin ?? '-' }}
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="py-10 text-center text-slate-400 font-medium">
+                                Anda belum pernah membuat pengajuan pelatihan.
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border-collapse border border-gray-300">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="border border-gray-300 px-4 py-2 text-left">Tanggal Pengajuan</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left">Nama Karyawan</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left">Pelatihan</th>
-                                <th class="border border-gray-300 px-4 py-2 text-center">Status Approval</th>
-                                <th class="border border-gray-300 px-4 py-2 text-left">Catatan HRD</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($requests as $req)
-                            <tr>
-                                <td class="border border-gray-300 px-4 py-2">
-                                    {{ $req->created_at->format('d M Y, H:i') }}
-                                </td>
-                                <td class="border border-gray-300 px-4 py-2">
-                                    <span class="font-medium text-gray-900">{{ $req->employee->nama }}</span><br>
-                                    <span class="text-xs text-gray-500">NIK: {{ $req->employee->nik }}</span>
-                                </td>
-                                <td class="border border-gray-300 px-4 py-2">
-                                    {{ $req->training->nama_pelatihan }}
-                                </td>
-                                <td class="border border-gray-300 px-4 py-2 text-center">
-                                    @if($req->status == 'pending')
-                                        <span class="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-800 font-semibold">MENUNGGU</span>
-                                    @elseif($req->status == 'disetujui' || $req->status == 'approved')
-                                        <span class="px-2 py-1 text-xs rounded bg-green-100 text-green-800 font-semibold">DISETUJUI</span>
-                                    @else
-                                        <span class="px-2 py-1 text-xs rounded bg-red-100 text-red-800 font-semibold">DITOLAK</span>
-                                    @endif
-                                </td>
-                                <td class="border border-gray-300 px-4 py-2 text-sm text-gray-600">
-                                    {{ $req->catatan_admin ?? '-' }}
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="border border-gray-300 px-4 py-2 text-center text-gray-500">
-                                    Anda belum pernah membuat pengajuan pelatihan.
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
+            <div class="mt-8">
+                {{ $requests->links() }}
             </div>
         </div>
     </div>
